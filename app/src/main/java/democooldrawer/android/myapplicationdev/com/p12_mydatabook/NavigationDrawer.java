@@ -10,7 +10,6 @@ public class NavigationDrawer {
     private String navListName;
     private int itemNumber;
 
-
     public NavigationDrawer(String navListName, int itemNumber) {
         this.navListName = navListName;
         this.itemNumber = itemNumber;
@@ -32,3 +31,4 @@ public class NavigationDrawer {
         this.itemNumber = itemNumber;
     }
 }
+

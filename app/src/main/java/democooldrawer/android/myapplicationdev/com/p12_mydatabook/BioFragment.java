@@ -17,6 +17,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,7 +31,10 @@ public class BioFragment extends Fragment {
 
     AlertDialog.Builder dialog;
     AlertDialog alertDialog;
-    String text;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference bioRef;
+
+
 
     public BioFragment() {
         // Required empty public constructor
@@ -40,6 +49,23 @@ public class BioFragment extends Fragment {
         View view =  inflater.inflate(R.layout.biofragment, container, false);
         Button btnEdit = (Button)view.findViewById(R.id.btnFragBio);
         final TextView tvBio = (TextView)view.findViewById(R.id.tvFragBio);
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        bioRef = firebaseDatabase.getReference("/Bio");
+
+        bioRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String bio = dataSnapshot.getValue(String.class);
+                tvBio.setText(bio);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +83,8 @@ public class BioFragment extends Fragment {
                         .setPositiveButton("Done", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                tvBio.setText(etPassphrase.getText().toString());
+                                bioRef.setValue(etPassphrase.getText().toString());
+
                             }
                         }).setNegativeButton("Cancel", null);
                 alertDialog = dialog.create();
