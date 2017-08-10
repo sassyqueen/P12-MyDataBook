@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
                     position, long arg3) {
 
                 Fragment fragment = null;
+
                 if (position == 0)
                     fragment = new BioFragment();
                 else if (position == 1)
