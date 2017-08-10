@@ -20,7 +20,7 @@ public class AboutUsActivity extends AppCompatActivity {
         ab.setDisplayHomeAsUpEnabled(true);
 
         iv = (ImageView)findViewById(R.id.imageView);
-        String imageUrl = "http://68.media.tumblr.com/6961bf4827c1626518e156cd8df6fe62/tumblr_otq1x9z3EK1roqv59o1_500.png";
+        String imageUrl = "https://upload.wikimedia.org/wikipedia/commons/8/80/Republic_Polytechnic_Logo.jpg";
         Picasso.with(AboutUsActivity.this).load(imageUrl).into(iv);
 
 
