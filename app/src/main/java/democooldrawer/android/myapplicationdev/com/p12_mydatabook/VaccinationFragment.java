@@ -15,6 +15,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,7 +29,8 @@ public class VaccinationFragment extends Fragment {
 
     AlertDialog.Builder dialog;
     AlertDialog alertDialog;
-    String text;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference vaccinationRef;
 
 
     public VaccinationFragment() {
@@ -38,6 +45,24 @@ public class VaccinationFragment extends Fragment {
         View view =  inflater.inflate(R.layout.vaccinationfragment, container, false);
         Button btnEdit = (Button)view.findViewById(R.id.btnFragVaccination);
         final TextView tvVac = (TextView)view.findViewById(R.id.tvFragVac);
+
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        vaccinationRef = firebaseDatabase.getReference("/Vaccination");
+
+        vaccinationRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String vac = dataSnapshot.getValue(String.class);
+                tvVac.setText(vac);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
 
         btnEdit.setOnClickListener(new View.OnClickListener() {
@@ -56,7 +81,7 @@ public class VaccinationFragment extends Fragment {
                         .setPositiveButton("Done", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                tvVac.setText(etPassphrase.getText().toString());
+                                vaccinationRef.setValue(etPassphrase.getText().toString());
                             }
                         }).setNegativeButton("Cancel", null);
                 alertDialog = dialog.create();

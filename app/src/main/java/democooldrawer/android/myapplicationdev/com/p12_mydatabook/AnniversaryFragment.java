@@ -18,6 +18,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,7 +33,8 @@ public class AnniversaryFragment extends Fragment {
     AlertDialog.Builder dialog;
     AlertDialog alertDialog;
     Context context;
-    String text;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference annivRef;
 
     public AnniversaryFragment() {
         // Required empty public constructor
@@ -42,6 +49,24 @@ public class AnniversaryFragment extends Fragment {
         View view = inflater.inflate(R.layout.anniversaryfragment, container, false);
         Button btnEdit = (Button)view.findViewById(R.id.btnFragAnniversary);
         final TextView tvAnniv = (TextView)view.findViewById(R.id.tvFragAnniv);
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        annivRef = firebaseDatabase.getReference("/Anniversary");
+
+        annivRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String anniv = dataSnapshot.getValue(String.class);
+                tvAnniv.setText(anniv);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
         btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,7 +84,8 @@ public class AnniversaryFragment extends Fragment {
                         .setPositiveButton("Done", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                tvAnniv.setText(etPassphrase.getText().toString());
+                                annivRef.setValue(etPassphrase.getText().toString());
+
                             }
                         }).setNegativeButton("Cancel", null);
                 alertDialog = dialog.create();
