@@ -16,14 +16,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
-    private String[] drawerItems;
     private DrawerLayout drawerLayout;
     private ListView drawerList;
-    ArrayAdapter<String> aa;
+    CustomAdapter ca;
     String currentTitle;
     ActionBar ab;
+    private ArrayList<NavigationDrawer> drawerItems;
 
     private ActionBarDrawerToggle drawerToggle;
 
@@ -35,12 +37,18 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerList = (ListView) findViewById(R.id.left_drawer);
 
-        drawerItems = new String[] { "Bio", "Vaccination", "Anniversary", "About Us" };
+        drawerItems = new ArrayList<NavigationDrawer>();
+        drawerItems.add(new NavigationDrawer("Bio", 0));
+        drawerItems.add(new NavigationDrawer("Vaccination", 1));
+        drawerItems.add(new NavigationDrawer("Anniversary", 2));
+        drawerItems.add(new NavigationDrawer("About Us", 3));
+
         ab = getSupportActionBar();
 
-        aa = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_activated_1, drawerItems);
-        drawerList.setAdapter(aa);
+        //aa = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_activated_1, drawerItems);
+
+        ca = new CustomAdapter(this, R.layout.row, drawerItems);
+        drawerList.setAdapter(ca);
 
         // Set the list's click listener
         drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -70,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 // Highlight the selected item,
                 //  update the title, and close the drawer
                 drawerList.setItemChecked(position, true);
-                currentTitle = drawerItems[position];
+                currentTitle = drawerItems.get(position).getNavListName();
                 ab.setTitle(currentTitle);
                 drawerLayout.closeDrawer(drawerList);
             }
